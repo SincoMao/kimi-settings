@@ -13,8 +13,8 @@ deploy.ps1 — Claude Code 配置一键部署（由同目录 d-kimi.bat 调用�
      等价脚本，node 不可用时回退 PowerShell JSON 处理，写前备份）；
   4. 按 -AgentAction 同步 vision 子代理：
        deploy = 部署本目录 agents\vision.md 到 <claude>\agents\vision.md
-       remove = 备份并删除 <claude>\agents\vision.md（不再需要视觉转录专线时清理，
-                 残留的 k3-256k 路由不会报错，但会造成任务绕行）
+       remove = 备份并删除 <claude>\agents\vision.md（不再需要视觉转录专线时清理；
+                 残留的其他供应商 vision 定义指向其各自端点模型，混用会路由失败）
        none   = 跳过
   5. 打印端点 / 模型 / 密钥掩码摘要。部署目标：%CLAUDE_CONFIG_DIR%（若已设置），否则 %USERPROFILE%\.claude
 #>
@@ -172,7 +172,7 @@ Write-Host "===== 部署完成：$ProfileLabel =====" -ForegroundColor Green
 Write-Host ("  API 端点    : {0}" -f $json.env.ANTHROPIC_BASE_URL)
 Write-Host ("  Opus/Sonnet : {0}（1M 上下文需 Allegretto 及以上档位）" -f $json.env.ANTHROPIC_DEFAULT_OPUS_MODEL)
 Write-Host ("  Haiku       : {0}" -f $json.env.ANTHROPIC_DEFAULT_HAIKU_MODEL)
-Write-Host ("  vision 专线 : {0}" -f 'k3-256k（agents\vision.md frontmatter）')
+Write-Host ("  vision 专线 : {0}" -f 'k3（agents\vision.md frontmatter 裸名）')
 Write-Host ("  密钥        : {0}（来自 {1}）" -f $masked, $KeyEnvName)
 Write-Host ""
 Write-Host "已运行的会话不会热加载 settings.json 与 .claude.json，请新开 Claude Code 会话生效。" -ForegroundColor Cyan
